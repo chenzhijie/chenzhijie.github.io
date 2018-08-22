@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2018-08-22T10:52:50.414Z</updated>
+  <updated>2018-08-22T12:23:27.149Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -21,7 +21,7 @@
     <link href="http://yoursite.com/2018/08/22/ipfs-p2p-bitswap/"/>
     <id>http://yoursite.com/2018/08/22/ipfs-p2p-bitswap/</id>
     <published>2018-08-22T10:49:45.000Z</published>
-    <updated>2018-08-22T10:52:50.414Z</updated>
+    <updated>2018-08-22T12:23:27.149Z</updated>
     
     <content type="html"><![CDATA[<p>IPFS P2P网络原理 以及 Bitswap的数据交互流程</p><p>首先IPFS执行初始化， 先配置 <code>IPFS_PATH</code> </p><figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ export IPFS_PATH = $PWD</span><br></pre></td></tr></table></figure><p>IPFS初始化时会在本地生成一个默认的 <code>config</code> 文件</p><p>然后在 <code>builder.go</code> 文件里的 <code>setupNode</code> 函数会调用 <code>startOnlineServices</code> 将配置文件中的相关信息传参，从而建立IPFS host</p><p><code>bitswap</code>  是一个数据块交互的网络实现， 每个IPFS节点有一个bitswap网络。 通过<code>wantmanager</code>进行管理, 而wantmanager里面又实现了队列机制。 如果队列有消息需要发送的话，如果<code>msgQueue</code> 的<code>sender</code>为nil，则会先建立连接，生成一个 <code>sender</code> 然后发送数据。</p>]]></content>
     
@@ -37,26 +37,7 @@
     </summary>
     
     
-  </entry>
-  
-  <entry>
-    <title>Minos - A Hexo theme</title>
-    <link href="http://yoursite.com/2018/05/14/about/"/>
-    <id>http://yoursite.com/2018/05/14/about/</id>
-    <published>2018-05-14T10:15:58.000Z</published>
-    <updated>2018-08-22T12:09:36.540Z</updated>
-    
-    <content type="html"><![CDATA[<h1 id="This-is-the-post-content…"><a href="#This-is-the-post-content…" class="headerlink" title="This is the post content…"></a>This is the post content…</h1>]]></content>
-    
-    <summary type="html">
-    
-      
-      
-        &lt;h1 id=&quot;This-is-the-post-content…&quot;&gt;&lt;a href=&quot;#This-is-the-post-content…&quot; class=&quot;headerlink&quot; title=&quot;This is the post content…&quot;&gt;&lt;/a&gt;This is the
-      
-    
-    </summary>
-    
+      <category term="ipfs" scheme="http://yoursite.com/tags/ipfs/"/>
     
   </entry>
   

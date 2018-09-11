@@ -2,7 +2,7 @@
 <html class="has-navbar-fixed-top">
 <head>
     <meta charset="utf-8">
-<title>ipfs-p2p-bitswap - ChenZhijie</title>
+<title>归档: 2018/9 - ChenZhijie</title>
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
 <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/outdated-browser/1.1.5/outdatedbrowser.min.css">
@@ -94,121 +94,22 @@
 
     <section class="section">
     <div class="container">
-    <article class="article content gallery" itemscope itemprop="blogPost">
-    <h1 class="article-title is-size-3 is-size-4-mobile" itemprop="name">
-        
-            ipfs-p2p-bitswap
-        
-    </h1>
-    <div class="article-meta columns is-variable is-1 is-multiline is-mobile is-size-7-mobile">
-        <span class="column is-narrow">
-            <time datetime="2018-08-22T10:49:45.000Z" itemprop="datePublished">8月 22 2018</time>
-        </span>
-        
-        
-        <span class="column is-narrow">
+    
+    
+        <div class="archive content">
+            <h4 class="title is-4" id="2018">2018</h4>
+            <div class="articles">
             
+                <div class="article content>">
+                    <time class="is-text-small" datetime="2018-09-11T05:37:45.000Z" itemprop="datePublished">
+                        9月 11</time>
+                    <h6 class="title is-6"><a href="/2018/09/11/ethereum-blocksync/">ethereum-blocksync</a></h6>
+                </div>
             
-            3 分钟 读完 (约 496 字)
-        </span>
-        
-    </div>
-    <div class="article-entry is-size-6-mobile" itemprop="articleBody">
-    
-        <h3 id="IPFS-P2P网络原理-以及-Bitswap的数据交互流程"><a href="#IPFS-P2P网络原理-以及-Bitswap的数据交互流程" class="headerlink" title="IPFS P2P网络原理 以及 Bitswap的数据交互流程"></a>IPFS P2P网络原理 以及 Bitswap的数据交互流程</h3><blockquote>
-<p>关于IPFS的P2P网络相关分析是基于 v0.4.15</p>
-<p>commit: 8671f7bb9f1409a60e97666422ff87017dc4cbfc</p>
-</blockquote>
-<p>首先IPFS执行初始化， 先配置 <code>IPFS_PATH</code> , 比方是当前目录</p>
-<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ export IPFS_PATH = $PWD</span><br></pre></td></tr></table></figure>
-<p>初始化</p>
-<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ ipfs init</span><br></pre></td></tr></table></figure>
-<p>IPFS初始化时会在本地生成一个默认的 <code>config</code> 文件</p>
-<p>这个config文件会有一些ip和端口的配置，配置的就是本地的 <code>host</code></p>
-<p>然后在 <code>builder.go</code> 文件里的 <code>setupNode</code> 函数会调用 <code>startOnlineServices</code> 将配置文件中的相关信息传参，从而建立IPFS <code>host</code></p>
-<p><code>bitswap</code>  是一个数据块交互的网络实现， 每个IPFS节点有一个bitswap网络。 通过<code>wantmanager</code>进行管理, 而<code>wantmanager</code> 里面又实现了队列机制。 如果队列有消息需要发送的话，首先判断<code>msgQueue</code> 的<code>sender</code>是否为nil，则会先建立连接，生成一个 <code>sender</code> 然后发送数据。</p>
-<p><code>bitswap</code> 的一些操作命令，基本都是查看数据交互过程的一些数据信息展示， 实际操作主要还是利用到 <code>ipfs block get</code> 等相关命令</p>
-<p><code>ipfs block get</code>  后面带着指定的块 <code>cid</code> ， 会先从本地<code>blockstore</code>里面判断是否有指定的块，如果没有则根据当前网络连接的情况， 将所需要的 块 放在 <code>wantlist</code>里面，形成一个 <code>work</code>， 触发当前的 <code>msgQueue</code>的事件循环机制<code>doWork</code> 去执行，发送<code>bitswap</code> 消息 从而从其他节点中获取到需要的块。</p>
-<p>获取一个数据<code>block</code>的时序图</p>
-<div id="sequence-0"></div>
-
-
-
-<p><script src="https://cdn.bootcss.com/webfont/1.6.28/webfontloader.js"></script><script src="https://cdn.bootcss.com/raphael/2.2.7/raphael.min.js"></script><script src="https://cdn.bootcss.com/underscore.js/1.8.3/underscore-min.js"></script><script src="https://cdn.bootcss.com/js-sequence-diagrams/1.0.6/sequence-diagram-min.js"></script><textarea id="sequence-0-code" style="display: none">participant Node
-participant Peer
-Note over Node:getCmd -> bitswap.getBlock()
-Note over Node:generate work
-Note over Node:work picked by msgQueue
-Node->Peer: streamMessageSender.SendMsg()
-Note over Peer: accepted in handleNewStream()
-Note over Peer: bitswap.ReceiveMessage()
-Note over Peer: bitswap.engine.MessageReceived()
-Note over Peer: push entry to peer_request_queue
-Note over Peer: wantmanager.SendBlock()
-Peer->Node:bsnet.SendMessage()
-Note over Node: accepted in handleNewStream()
-Note over Node: bitswap.ReceiveMessage()
-Note over Node: put to blockstore
-Note over Node: engine.AddBlock()</textarea><textarea id="sequence-0-options" style="display: none">{"theme":"simple"}</textarea><script>  var code = document.getElementById("sequence-0-code").value;  var options = JSON.parse(decodeURIComponent(document.getElementById("sequence-0-options").value));  var diagram = Diagram.parse(code);  diagram.drawSVG("sequence-0", options);</script></p>
-
-    
-    </div>
-    
-    <div class="columns is-variable is-1 is-multiline is-mobile">
-    
-        <span class="column is-narrow"><a class="tag is-light article-tag" href="/tags/ipfs/">#ipfs</a></span>
-    
-    </div>
+            </div>
+        </div>
     
     
-    <div class="columns is-mobile is-multiline article-nav">
-        <span class="column is-12-mobile is-half-desktop  article-nav-prev">
-            
-            <a href="/2018/09/11/ethereum-blocksync/">ethereum-blocksync</a>
-            
-        </span>
-        <span class="column is-12-mobile is-half-desktop is-hidden-mobile article-nav-next">
-            
-        </span>
-    </div>
-    
-</article>
-
-
-<div class="sharebox">
-    
-<div class="sharethis-inline-share-buttons"></div>
-<script type='text/javascript' src='http://www.baidu.com' async='async'></script>
-
-</div>
-
-
-
-<div class="comments">
-    <h3 class="title is-4">评论</h3>
-    
-<script>
-    var disqus_config = function () {
-        this.page.url = 'http://yoursite.com/2018/08/22/ipfs-p2p-bitswap/';
-        this.page.identifier = '2018/08/22/ipfs-p2p-bitswap/';
-        
-        this.language = 'zh';
-        
-    };
-    (function() {
-        var d = document, s = d.createElement('script');  
-        s.src = '//' + 'czj' + '.disqus.com/embed.js';
-        s.setAttribute('data-timestamp', +new Date());
-        (d.head || d.body).appendChild(s);
-    })();
-</script>
-
-<div id="disqus_thread">
-    
-    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-</div>
-</div>
-
     </div>
 </section>
     <footer class="footer">
